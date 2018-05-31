@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<script>
+	function getURLParameter(name) {
+	   return decodeURI(
+	       (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1] || ''
+	   );
+	}
+	</script>
+	<meta charset="utf-8">
+	<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" name="viewport">
+	<title>Congratulations!</title>
+	<script src="sweetalert.min.js">
+	</script>
+	<link href="sweetalert.css" rel="stylesheet" type="text/css">
+	<script src="assets/js/jquery-3.2.1.min.js">
+	</script>
+	<script src="assets/js/scratch.js" type="text/javascript">
+	</script>
+	<script>
+	           
+	           var cardSelected = false;
+	           var cardsArray;
+	           var instructions;
+	           var scratchcards;
+
+	           var win = 'assets/images/win1.png';
+	           var lose = 'assets/images/lose1.png';
+	           var foreground = 'assets/images/gift3.png';
+	           
+	           function MyResize(){
+	                    document.getElementById("10Card").style.width = "95px";
+	                    document.getElementById("11Card").style.width = "95px";
+	                    document.getElementById("12Card").style.width = "95px";
+	                    document.getElementById("13Card").style.width = "95px";
+	                    document.getElementById("14Card").style.width = "95px";
+	                    document.getElementById("15Card").style.width = "95px";
+	                    document.getElementById("16Card").style.width = "95px";
+	                    document.getElementById("17Card").style.width = "95px";
+	                    document.getElementById("18Card").style.width = "95px";
+	                    
+	           }
+	           function counting(covered, element) {
+	               if(!cardSelected && covered > 0) {
+	                    //this loop will lock all the cards minus the one which has been scratched off
+	                    for(var i = 0, l = cardsArray.length; i < 9; i++) {
+	                       if(!(cardsArray[i].id == element.container.id)) {
+	                           cardsArray[i].lock();
+	                           cardsArray[i].className = 'disabled';
+	                       }
+	                   }
+	                   cardSelected = true;
+	               }
+	           }
+	           function MyCounting(covered, element) {
+	               if(!cardSelected && covered > 0) {
+	                    //this loop will lock all the cards minus the one which has been scratched off
+	                    for(var i = 0, l = cardsArray.length; i < l; i++) {
+	                       if(!(cardsArray[i].id == element.container.id)) {
+	                           cardsArray[i].lock();
+	                           cardsArray[i].className = 'disabled';
+	                       }
+	                   }
+	                   cardSelected = true;
+	               }
+	           }
+	                       function loseCallback(element) {
+	               for(var i = 0, l = cardsArray.length; i <9; i++) {
+	                   if(!(cardsArray[i].id == element.container.id)) {
+	                       //cardsArray[i].clean();
+	                   }
+	         if(cardsArray[i].className != 'disabled'){
+	           cardsArray[i].className += ' spin';
+	         }
+	               }
+	               var b = element.container.style.backgroundImage;
+	               if(b.indexOf(win) > -1) {
+	       setTimeout(winFunction, 1500);
+	function winFunction(){
+	 alert("Hello! I am an alert box!!");
+	                           
+	               }} else {   
+	       setTimeout(loseFunction, 1500);
+	       function loseFunction(){
+	         alert("Hello! I am an alert box!!");
+	                       shift();
+	                       restartAll();
+	                   };
+	               }
+	       }
+	               function restartAll() {
+	               //instructions.removeEventListener('click', restartAll, false);
+	               for(var i=0, l=cardsArray.length; i<9; i++) {
+	                   cardsArray[i].restart();
+	                   cardsArray[i].className = '';
+	                   isMouseDown = false;
+	               }
+	               cardSelected = false;
+	               //instructions.innerHTML = 'Choose one card';
+	           }
+	               
+	           
+
+	function winCallback(element) {
+	               for(var i = 0, l = cardsArray.length; i < l; i++) {
+	                   if(!(cardsArray[i].id == element.container.id)) {
+	                       //cardsArray[i].clean();
+	                   }
+	         if(cardsArray[i].className != 'disabled'){
+	           cardsArray[i].className += ' spin';
+	         }
+	               }
+	               var b = element.container.style.backgroundImage;
+	               if(b.indexOf(win) > -1) {
+	       setTimeout(winFunction, 1500);
+	function winFunction(){
+	 
+	 alert("Hello! I am an alert box!!");
+	        window.location.href = "http://stackoverflow.com";             
+	               }} else {   
+	       setTimeout(loseFunction, 1500);
+	       function loseFunction(){
+	         
+	                   swal({
+	                   title: "You Lost!",
+	                   text: "<br>You have (1) try left.",
+	                   confirmButtonText: "Scratch Again",
+	                   html:true,
+	                   },
+	                   function(){
+	                       shift();
+	                       restartAll();
+	                   });
+	               }
+	       }
+	               function restartAll() {
+	               //instructions.removeEventListener('click', restartAll, false);
+	               for(var i=0, l=cardsArray.length; i<9; i++) {
+	                   cardsArray[i].restart();
+	                   cardsArray[i].className = '';
+	                   isMouseDown = false;
+	               }
+	               cardSelected = false;
+	               //instructions.innerHTML = 'Choose one card';
+	           }
+	               
+	           }      
+	           function shift() {
+	               $("#1Card, #2Card, #3Card, #4Card, #5Card, #6Card, #7Card, #8Card, #9Card").delay(2000).hide();
+	               $("#10Card, #11Card, #12Card, #13Card, #14Card, #15Card, #16Card, #17Card, #18Card").css("visibility", "visible");
+	       $("#cut1, #cut2, #cut3").css("position", "fixed");
+	       $("#cut1, #cut2, #cut3").css("bottom", "0")
+	               MyResize();
+	           }
+	           function shuffle() {
+	               for (var i = scratchcards.children.length; i >= 0; i--) {
+	                   scratchcards.appendChild(scratchcards.children[Math.random() * i | 0]);
+	               }
+	           }
+
+	           window.onload = function() {
+
+	               instructions = document.getElementById('instructions');
+
+	               scratchcards1 = document.getElementById('scratchcards');
+	               
+	               cardsArray = [ document.getElementById('1Card'), document.getElementById('2Card'), document.getElementById('3Card'), document.getElementById('4Card'), document.getElementById('5Card'), document.getElementById('6Card'), document.getElementById('7Card'), document.getElementById('8Card'), document.getElementById('9Card'), document.getElementById('10Card'), document.getElementById('11Card'), document.getElementById('12Card'), document.getElementById('13Card'), document.getElementById('14Card'), document.getElementById('15Card'), document.getElementById('16Card'), document.getElementById('17Card'), document.getElementById('18Card') ];
+
+	               createScratchCard({
+	                   'container': cardsArray[0],
+	                   'background': lose,
+	                   'foreground': foreground,
+	                   'coin':'assets/images/coin2.png',
+	                   'percent':85,
+	                   'thickness':20,
+	                   'counter':'counting',
+	                   'callback': 'loseCallback'
+	               });
+	               
+	               createScratchCard({
+	                   'container': cardsArray[1],
+	                   'background': lose,
+	                   'foreground': foreground,
+	                   'coin':'assets/images/coin2.png',
+	                   'percent':85,
+	                   'thickness':20,
+	                   'counter':'counting',
+	                   'callback': 'loseCallback'
+	               });
+
+	               createScratchCard({
+	                   'container': cardsArray[2],
+	                   'background': lose,
+	                   'foreground': foreground,
+	                   'coin':'assets/images/coin2.png',
+	                   'percent':85,
+	                   'thickness':20,
+	                   'counter':'counting',
+	                   'callback': 'loseCallback'
+	               });
+	               createScratchCard({
+	                   'container': cardsArray[3],
+	                   'background': lose,
+	                   'foreground': foreground,
+	                   'coin':'assets/images/coin2.png',
+	                   'percent':85,
+	                   'thickness':20,
+	                   'counter':'counting',
+	                   'callback': 'loseCallback'
+	               });
+	               createScratchCard({
+	                   'container': cardsArray[4],
+	                   'background': lose,
+	                   'foreground': foreground,
+	                   'coin':'assets/images/coin2.png',
+	                   'percent':85,
+	                   'thickness':20,
+	                   'counter':'counting',
+	                   'callback': 'loseCallback'
+	               });
+	               createScratchCard({
+	                   'container': cardsArray[5],
+	                   'background': lose,
+	                   'foreground': foreground,
+	                   'coin':'assets/images/coin2.png',
+	                   'percent':85,
+	                   'thickness':20,
+	                   'counter':'counting',
+	                   'callback': 'loseCallback'
+	               });
+	               createScratchCard({
+	                   'container': cardsArray[6],
+	                   'background': lose,
+	                   'foreground': foreground,
+	                   'coin':'assets/images/coin2.png',
+	                   'percent':85,
+	                   'thickness':20,
+	                   'counter':'counting',
+	                   'callback': 'loseCallback'
+	               });
+	               createScratchCard({
+	                   'container': cardsArray[7],
+	                   'background': lose,
+	                   'foreground': foreground,
+	                   'coin':'assets/images/coin2.png',
+	                   'percent':85,
+	                   'thickness':20,
+	                   'counter':'counting',
+	                   'callback': 'loseCallback'
+	               });
+	               createScratchCard({
+	                   'container': cardsArray[8],
+	                   'background': lose,
+	                   'foreground': foreground,
+	                   'coin':'assets/images/coin2.png',
+	                   'percent':85,
+	                   'thickness':20,
+	                   'counter':'counting',
+	                   'callback': 'loseCallback'
+	               });
+	               createScratchCard({
+	                   'container': cardsArray[9],
+	                   'background': win,
+	                   'foreground': foreground,
+	                   'coin':'assets/images/coin2.png',
+	                   'percent':85,
+	                   'thickness':20,
+	                   'counter':'MyCounting',
+	                   'callback': 'winCallback'
+	               });
+	               createScratchCard({
+	                   'container': cardsArray[10],
+	                   'background': win,
+	                   'foreground': foreground,
+	                   'coin':'assets/images/coin2.png',
+	                   'percent':85,
+	                   'thickness':20,
+	                   'counter':'MyCounting',
+	                   'callback': 'winCallback'
+	               });
+	               createScratchCard({
+	                   'container': cardsArray[11],
+	                   'background': win,
+	                   'foreground': foreground,
+	                   'coin':'assets/images/coin2.png',
+	                   'percent':85,
+	                   'thickness':20,
+	                   'counter':'MyCounting',
+	                   'callback': 'winCallback'
+	               });
+	               createScratchCard({
+	                   'container': cardsArray[12],
+	                   'background': win,
+	                   'foreground': foreground,
+	                   'coin':'assets/images/coin2.png',
+	                   'percent':85,
+	                   'thickness':20,
+	                   'counter':'MyCounting',
+	                   'callback': 'winCallback'
+	               });
+	               createScratchCard({
+	                   'container': cardsArray[13],
+	                   'background': win,
+	                   'foreground': foreground,
+	                   'coin':'assets/images/coin2.png',
+	                   'percent':85,
+	                   'thickness':20,
+	                   'counter':'MyCounting',
+	                   'callback': 'winCallback'
+	               });
+	               createScratchCard({
+	                   'container': cardsArray[14],
+	                   'background': win,
+	                   'foreground': foreground,
+	                   'coin':'assets/images/coin2.png',
+	                   'percent':85,
+	                   'thickness':20,
+	                   'counter':'MyCounting',
+	                   'callback': 'winCallback'
+	               });
+	               createScratchCard({
+	                   'container': cardsArray[15],
+	                   'background': win,
+	                   'foreground': foreground,
+	                   'coin':'assets/images/coin2.png',
+	                   'percent':85,
+	                   'thickness':20,
+	                   'counter':'MyCounting',
+	                   'callback': 'winCallback'
+	               });
+	               createScratchCard({
+	                   'container': cardsArray[16],
+	                   'background': win,
+	                   'foreground': foreground,
+	                   'coin':'assets/images/coin2.png',
+	                   'percent':85,
+	                   'thickness':20,
+	                   'counter':'MyCounting',
+	                   'callback': 'winCallback'
+	               });
+	               createScratchCard({
+	                   'container': cardsArray[17],
+	                   'background': win,
+	                   'foreground': foreground,
+	                   'coin':'assets/images/coin2.png',
+	                   'percent':85,
+	                   'thickness':20,
+	                   'counter':'MyCounting',
+	                   'callback': 'winCallback'
+	               });
+	               //MyCounting();
+	           }
+	</script>
+	<style>
+	           body { height:100%; text-align: center; height: 100%; background-color:#f2eb8a; font-family:arial; overflow-y:hidden }
+	           #instructions { text-align: center; color: #444; font-size: 1.2em; text-transform: uppercase; padding-top: 40px; cursor: pointer; }
+	           #1Card, #2Card, #3Card{ display: inline-block; vertical-align: middle; width:95px;margin-top: 5px;}
+	           #4Card, #5Card, #6Card{ display: inline-block; vertical-align: middle; width:95px;margin-top: 5px;}
+	           #7Card, #8Card, #9Card{ display: inline-block; vertical-align: middle; width:95px;margin-top: 5px;}
+	           #10Card, #11Card, #12Card{ display: block; vertical-align: middle; width:95px;margin-top: 5px;}
+	           #13Card, #14Card, #15Card{ display: inline-block; vertical-align: middle; width:95px;margin-top: 5px;}
+	           #16Card, #17Card, #18Card{ display: inline-block; vertical-align: middle; width:95px;margin-top: 5px;}
+	           .disabled { opacity: 0.5; display: inline-block; vertical-align: middle; width:95px; height: 95px; margin-top: 5px;}
+	           .card { display: inline-block; vertical-align: middle; width:95px; height: 95px; margin-top: 5px;}
+	           #top, #bottom, #left, #right {
+	                 background: #f35757;
+	                 position: fixed;
+	           }
+	           #left, #right {
+	                  top: 0; bottom: 0;
+	                  width: 7px;
+	           }
+	           #left { left: 0; }
+	           #right { right: 0; }
+	       
+	           #top, #bottom {
+	           left: 0; right: 0;
+	           height: 7px;
+	           }
+	           #top { top: 0; }
+	           #bottom { bottom: 0; }
+	           #header{}
+	           #wrapper{overflow-y:hidden;overflow-x:hidden; position:fixed; width:100%; }
+	           #cut {display: inline-block;}
+	     .spin {
+	       position: relative;
+	       animation: spin 1s linear;
+	       }
+	     @keyframes spin {
+	       from {transform: rotate(0deg);}
+	       to {transform: rotate(360deg);}
+	     }
+	</style>
+</head>
+<body style="margin:0;">
+	<script>
+	 alert("Hello! I am an alert box!!");
+
+	</script> <img id="secure" src="secure.png" style="position:absolute; right:10px; bottom:10px; width: 30%">
+	<div id="wrapper">
+		<div id="left"></div>
+		<div id="right"></div>
+		<div id="top"></div>
+		<div id="bottom"></div>
+		<div id="header">
+			<center>
+				<img src="text.png" style="margin-top:9px;">
+			</center>
+		</div>
+		<div id="scratchcards">
+			<div id="cut1">
+				<div class="card" id="1Card"></div>
+				<div class="card" id="2Card"></div>
+				<div class="card" id="3Card"></div>
+			</div>
+			<div id="cut2">
+				<div class="card" id="4Card"></div>
+				<div class="card" id="5Card"></div>
+				<div class="card" id="6Card"></div>
+			</div>
+			<div id="cut3">
+				<div class="card" id="7Card"></div>
+				<div class="card" id="8Card"></div>
+				<div class="card" id="9Card"></div>
+			</div>
+			<div id="cut4">
+				<div class="card" id="10Card"></div>
+				<div class="card" id="11Card"></div>
+				<div class="card" id="12Card"></div>
+			</div>
+			<div id="cut5">
+				<div class="card" id="13Card"></div>
+				<div class="card" id="14Card"></div>
+				<div class="card" id="15Card"></div>
+			</div>
+			<div id="cut6">
+				<div class="card" id="16Card"></div>
+				<div class="card" id="17Card"></div>
+				<div class="card" id="18Card"></div>
+			</div>
+		</div>
+	</div>
+	<script>
+	   $(document).ready(function(){
+	       $("#10Card , #11Card, #12Card, #13Card, #14Card, #15Card, #16Card, #17Card, #18Card").css("visibility", "hidden");
+	       $("html").css("overflow-y", "hidden");
+	       });
+	</script>
+</body>
+</html>
