@@ -1,0 +1,127 @@
+import random
+from random import randint
+
+def fitness(genome,key):
+    seed = 'ztVvDguRAQDaSXXmLeJkUxRejhCGKfRjWDJCwowiSioIwtDqDHwelMnDfsXlhceWgMKXBUbsqlDVvXhpXXgtTjNmdBQfVsacmEvbHxQXodqKLaeFsrwlyMTkvziWPOAbgDjMXZRpUyrMVRmKhZotMIQtZHuzkvrlpgYgYAjFgOHYhrDquFTKxfargRnZDtISDpvEZqQJgLmRlyJrnqMiampUBMlcyyLqKJypCAiKhFIxuYlZkiYeOtVQCktDJAvgjiickEOvISfiaJqHUjOfuaRpdGFysIgoyXnVbjIVfDQhpgtVDIvHRmRnApMTDFQIPFWLNMkCWoMPgvNCpAFFDIEzxIWAodRAOrErfuTzdbRjMroKhomBBEzvraoKpAMeQXlzantpvUhWPNNCodmpJaThVTFYevCCwVahUpUncRDKpWhoogIUcpBcSSudgHrsIjQAcNjWFjOITSBWeASqotPMBIjzomMsdWEnyIkrfPgnbnYXgrwfZlNfYyAvBsUxQgVoLnHkWtXaKrGiDjEbJeMcOqTpCzFuSmRhIwPd'
+    s = 0
+    for x in range(len(genome)):
+        s+=(ord(seed[x+key])-ord(seed[key])-1)*(int(genome[x]))+30
+    return s
+
+def gaInputs():
+    NumChromEqual = 0
+    while(NumChromEqual == 0):
+        NumChrom = int(input("How many chromosomes are there per generation? "))
+        Selection = int(input("How many chromosomes will undergo selection? "))
+        Mutation = int(input("How many chromosomes will undergo mutation? "))
+        NewBlood = int(input("How many new chromosomes will be added? "))
+        CrossoverPairs = int(input("How many PAIRS of crossover will occur? "))
+        if ((CrossoverPairs*2) + Selection + Mutation + NewBlood == NumChrom):
+            print("Thank you, those values match")
+            NumChromEqual = 1
+        else:
+            print("Those values do not match, please try again.")
+    Generations = int(input("How many generations? "))
+    Key = int(input("What is the key to the fitness function (1-500)? "))
+    x=0
+    ChromList = generate(NumChrom)
+    BestSeen = 0
+    while(x<Generations):
+        y=0
+        TopScore = 0
+        while(y<NumChrom):
+            Score = fitness(ChromList[y], Key)
+            if Score > TopScore:
+                TopScore = Score
+                TopScorer = ChromList[y]
+            y+=1
+        if TopScore > BestSeen:
+            BestSeen = TopScore
+            BestScorer = TopScorer
+        print("Best in Generation " + str(x+1) + " is " + str(TopScorer) + " with " + str(TopScore) )
+        ChromList = createNextGen(ChromList, Selection, Mutation, NewBlood, CrossoverPairs)
+        x+=1
+    print("Best overall was " + str(BestScorer) + " with a total of " + str(BestSeen))
+
+def createNextGen(ChromList, Selection, Mutation, NewBlood, Crossover):
+    NewChrom = []
+    i=0
+    testNum = 0
+    while i < Selection:
+        y = randint(0,len(ChromList)-1)
+        Chromosome = ChromList.pop(y)
+        NewChrom.append(Chromosome)
+        i+=1
+    i=0
+    while i < Mutation:
+        y = randint(0,len(ChromList)-1)
+        Chromosome = ChromList.pop(y)
+        ChromosomeList = list(Chromosome)
+        z = randint(0,len(ChromosomeList)-1)
+        x = randint(0,1)
+        ChromosomeList[z] = x
+        Chromosome = ''.join(str(e) for e in ChromosomeList)
+        NewChrom.append(str(Chromosome))
+        i+=1
+    i=0
+    while i < NewBlood:
+        y = randint(0,len(ChromList)-1)
+        ChromList.pop(y)
+        z = generate(1)
+        Chromosome = z
+        NewChrom.append(Chromosome[0])
+        i+=1
+    i=0
+    while i < (Crossover):
+        x = randint(0,len(ChromList)-1)
+        Cross1 = ChromList.pop(x)
+        y = randint(0,len(ChromList)-1)
+        Cross2 = ChromList.pop(y)
+        Firstpart, Secondpart = Cross1[::2], Cross2[1::2]
+        Cross1and2 = Firstpart + Secondpart
+        Firstpart, Secondpart = Cross2[::2], Cross1[1::2]
+        Cross2and1 = Firstpart + Secondpart
+        NewChrom.append(Cross2and1)
+        testNum +=1
+        NewChrom.append(Cross1and2)
+        testNum +=1
+        i+=1
+    i=0
+    return NewChrom
+
+def generate(NumChrom):
+    ChromList = []
+    for j in range(0, NumChrom):
+        BitList = []
+        for i in range(0, 24):
+            x = str(random.randint(0, 1))
+            BitList.append(x)
+        BitString = ''.join(BitList)
+        ChromList.append(BitString)
+    return(ChromList)
+    
+def gaParameters(NumChrom, Selection, Mutation, NewBlood, CrossoverPairs, Generations, Fitness):
+    x=0
+    ChromList = generate(NumChrom)
+    BestSeen = 0
+    while(x<Generations):
+        y=0
+        TopScore = 0
+        while(y<NumChrom):
+            Score = fitness(ChromList[y], Fitness)
+            if Score > TopScore:
+                TopScore = Score
+                TopScorer = ChromList[y]
+            y+=1
+        if TopScore > BestSeen:
+            BestSeen = TopScore
+            BestScorer = TopScorer
+        print("Best in Generation " + str(x+1) + " is " + str(TopScorer) + " with " + str(TopScore) )
+        ChromList = createNextGen(ChromList, Selection, Mutation, NewBlood, CrossoverPairs)
+        x+=1
+    print("Best overall was " + str(BestScorer) + " with a total of " + str(BestSeen))
+
+
+#Note:  Avoid code duplication in your code.
+#This includes, but is not limited to
+#   gaInputs() should be little more than a wrapper around gaParameters()
