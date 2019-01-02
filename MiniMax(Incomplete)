@@ -1,0 +1,107 @@
+#HW2.py
+#Program by Alexander Wilkening
+#This is a program which executes a MiniMax Algorithm
+#The Board is a 9-character string
+#Moves are a 2 character string. The first character is an X or O and the second is the locataion number 1-9
+
+#To-Do
+#Program is currently functioning to where it can at least determine The MiniMax value when given a winning state
+
+def miniMax(Board, Move, isMax):#Write a program that takes in a state of the program
+    newBoard = changeBoard(Board, Move)
+    if (isLeaf(newBoard)) == True:
+        return evaluate(newBoard, isMax)
+    if isMax == True:
+        highest = -100000000
+        maxMoves = getMoves(newBoard)
+        for Event in maxMoves:
+            temp = miniMax(newBoard, Event, False)
+            if (temp > highest):
+                highest = temp
+                move = Event
+        return highest, move
+    else:
+        lowest = 100000000
+        minMoves = getMoves(newBoard)
+        for Event in minMoves:
+            temp = miniMax(newBoard, Event, True)
+            if (temp < lowest):
+                lowest = temp
+                move = Event
+        return lowest, move
+
+def changeBoard(Board, Move):
+    location = Move[1] #Separate Location and Character Choice
+    location = int(location)
+    location = location -1
+    choice = Move[0]
+    BoardList = list(Board)
+    BoardList[location] = choice
+    BoardString = ''
+    for item in BoardList:
+        BoardString = BoardString+item
+    print(BoardString)
+    return str(BoardString)
+    
+def isLeaf(Board):
+    ZeroEval = Board.count('-')
+    if ZeroEval == 0 or winnerFound(Board):
+        return True
+    else:
+        return False
+
+def evaluate(Board, isMax):
+    score = Board.count('-')
+    if isMax == True:
+        return score
+    if isMax == False:
+        score = score*-1
+        return score
+
+def getMoves(Board):
+    PossibleNumbers = []
+    PossibleMoves = []
+    BoardList = list(Board)
+    LoopVar = 0
+    for Character in BoardList:
+        if Character == "-":
+            print(BoardList.index(Character))
+            PossibleNumbers.append(LoopVar)
+        LoopVar += 1
+    for Number in PossibleNumbers:
+        PossibleMoves.append(["X",Number])
+        PossibleMoves.append(["O",Number])
+    print(PossibleMoves)
+    return PossibleMoves
+        
+def winnerFound(Board):
+    Board = list(Board)
+    if Board[0] != "-" and Board[0] == Board[1] and Board[1] == Board[2]: #Check Horizontal
+        return True
+    if Board[3] != "-" and Board[3] == Board[4] and Board[4] == Board[5]:
+        return True
+    if Board[6] != "-" and Board[6] == Board[7] and Board[7] == Board[8]:
+        return True
+    if Board[0] != "-" and Board[0] == Board[3] and Board[3] == Board[6]: #Check Vertical
+        return True
+    if Board[1] != "-" and Board[1] == Board[4] and Board[4] == Board[7]:
+        return True
+    if Board[2] != "-" and Board[2] == Board[5] and Board[5] == Board[8]:
+        return True
+    if Board[0] != "-" and Board[0] == Board[4] and Board[4] == Board[8]: #Check Diagonal
+        return True
+    if Board[2] != "-" and Board[2] == Board[4] and Board[4] == Board[7]:
+        return True
+    else:
+        return False
+
+GetStartingBoard = str(input("Please enter a starting board using -'s X's and O's. Please note the capitalization: "))
+GetStartingMove = str(input("Please enter a move to make in the format of what letter, and then the Number 1-9 corresponding to the space on the board. Examples: X1, X8, O7 "))
+GetStartingMove = list(GetStartingMove)
+GetStartingPlayer = str(input("Please enter the starting player. Max or Min? "))
+if GetStartingPlayer == "Max":
+    GetStartingPlayer = True
+else:
+    GetStartingPlayer = False
+WinningNumber = miniMax(GetStartingBoard, GetStartingMove, GetStartingPlayer)
+print(WinningNumber)
