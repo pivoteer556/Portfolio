@@ -43,8 +43,8 @@ def GetBirthDateIndex(columns):
 
 #Processes the requests via twilio
 def ProcessRequest(mobilePhones):
-    auth_token= 'da2ecb59c4277a819f503fdc0dc20edf'
-    account_sid = 'AC3fb33979890bd1923ad74a7a38cfeb0d'
+    auth_token= 'xxxxxxxxxxxxxxxxxxxx'
+    account_sid = 'xxxxxxxxxxxxxxxxxxxxxx'
     uri = 'https://api.twilio.com/2010-04-01/Accounts/accountSID/Messages.json'
     client = Client(account_sid, auth_token)
     for phoneNumber in mobilePhones:
